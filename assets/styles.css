@@ -1,0 +1,119 @@
+@import url(bootstrap.min.css);
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
+
+:root {
+  --bs-body-bg: rgba(33, 37, 41, 0.8);
+}
+
+/* Wallpaper */
+
+body::before {
+  content: "";
+  z-index: -1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(45deg, #212529, #495057);
+}
+
+/* Grid */
+
+body {
+  display: grid;
+  grid-template-areas: "header main";
+  grid-template-columns: 250px auto;
+}
+body > header {
+  grid-area: header;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  color: white;
+}
+body > header > div {
+  height: 100%;
+}
+body > main {
+  grid-area: main;
+}
+
+/* Loading */
+
+body.loading::before {
+  content: "";
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+}
+body.loading::after {
+  content: "";
+  z-index: 2;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 60px;
+  height: 60px;
+  border: 5px solid white;
+  border-top-color: transparent;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: loading 1s linear infinite;
+}
+@keyframes loading {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Table */
+
+.table {
+  --bs-table-bg: transparent;
+}
+.table tbody tr:last-child > *,
+.table tfoot tr:last-child > * {
+  border: 0;
+}
+/* .table th,
+.table td {
+  width: 2%;
+} */
+
+/* List Group */
+
+.list-group {
+  --bs-list-group-bg: transparent;
+}
+
+/* Cards */
+
+.card > .list-group {
+  border-top: 0;
+  border-bottom: 0;
+}
+.card .table {
+  margin: 0;
+}
+
+/* Animação de entrada */
+
+.fadeIn {
+  animation: fadeIn 0.5s ease-in-out;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

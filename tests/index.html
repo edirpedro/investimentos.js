@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mocha Tests</title>
+    <link rel="stylesheet" href="https://unpkg.com/mocha/mocha.css" />
+    <script src="https://unpkg.com/mocha/mocha.js"></script>
+    <script src="https://unpkg.com/expect.js"></script>
+    <script src="/assets/luxon.min.js"></script>
+    <script src="/assets/papaparse.min.js"></script>
+    <script>
+      mocha.setup("bdd");
+      mocha.checkLeaks();
+    </script>
+  </head>
+  <body>
+    <div id="mocha"></div>
+    <script type="module">
+      import "./extrato.js";
+      import "./compartilhado.js";
+      import "./ipca.js";
+      mocha.run();
+    </script>
+  </body>
+</html>
