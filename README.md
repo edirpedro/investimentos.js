@@ -2,7 +2,7 @@
 
 > Esta é uma ideia de utilizar JavaScript para consolidar dados de investimentos financeiros e oferecer respostas para perguntas simples como "Este investimento esta mesmo rendendo mais que a poupança?". É uma ferramenta voltada para programadores, caso não tenha conhecimento continue utilizando planilhas. Não pretendo transformar isto em algo grande porque investimento financeiro é algo complexo e de infinitas interpretações, esta aqui expressa apenas as minhas necessidades. Resolvi criar porque apesar das planilhas serem simples e úteis, achei que deveria tentar ter algo mais amplo, sem as limitações dos aplicativos.
 
-![Investimentos.js](https://github.com/edirpedro/investimentosjs/assets/screenshot.png)
+![Investimentos.js](https://github.com/edirpedro/investimentosjs/blob/main/assets/screenshot.png)
 
 ## Objetivos
 
