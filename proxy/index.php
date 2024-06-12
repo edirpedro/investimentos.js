@@ -3,17 +3,18 @@
 
 /**
  * Evitando problemas de Cross-Ogirin
- * /proxy/?clear - Limpeza do cache
+ * /proxy/?refresh - Marca os dados para atualização
  * /proxy/?name=ATIVO&url=https://... - Retorna dados armazenados ou os coleta
  */
 
 set_time_limit(0);
 error_reporting(0);
 
-// Limpa os dados em cache
+// Marca os arquivos para atualização evitando ficar sem dados quando falha
 
-if (isset($_GET['clear'])) {
-  array_map('unlink', array_filter((array) glob("cache/*")));
+if (isset($_GET['refresh'])) {
+  foreach (glob("cache/*.json") as $file)
+    rename($file, "{$file}.refresh");
   exit;
 }
 
@@ -31,8 +32,13 @@ if ($url && !file_exists("cache/{$name}.json")) {
   $json = curl_exec($ch);
   curl_close($ch);
   json_decode($json);
-  if (json_last_error() == JSON_ERROR_NONE)
+  if (json_last_error() == JSON_ERROR_NONE) {
     file_put_contents("cache/{$name}.json", $json);
+    unlink("cache/{$name}.json.refresh");
+  } else {
+    file_put_contents("cache/error.log", date('d/m/Y H:i:s') . " {$name} {$url}\n", FILE_APPEND);
+    rename("cache/{$name}.json.refresh", "cache/{$name}.json");
+  }
 }
 
 // Retorna os dados de um arquivo

@@ -1,5 +1,6 @@
 .DS_Store
 *.log
+*.code-workspace
 
 /database/*
 !/database/extrato-exemplo.csv

@@ -5,11 +5,11 @@ const template = `
   <div class="card-body">
     <h5 class="card-title text-uppercase">Posição</h5>
     <p class="card-text small">Como estão os ativos hoje.</p>
-    <table class="table text-end">
+    <table class="table">
       <thead>
         <tr>
           <td></td>
-          <th>Quantidade</th>
+          <th class="text-center">Quantidade</th>
           <th>Preço Médio</th>
           <th>Cotação</th>
         </tr>
@@ -17,10 +17,10 @@ const template = `
       <tbody class="table-group-divider">
         <% resultado.forEach((item) => { %>
         <tr>
-          <th class="text-start"><%= item.codigo %></th>
-          <td><%= item.quantidade %></td>
+          <th><%= item.codigo %></th>
+          <td class="text-center"><%= item.quantidade %></td>
           <td><%- formata(item.precoMedio, 'BRL') %></td>
-          <td><%- formata(item.cotacao, 'BRL') %></td>
+          <td><%- formata(item.cotacao, ['BRL', item.seta]) %></td>
         </tr>
         <% }); %>
       <tbody>
@@ -40,11 +40,14 @@ export default function WidgetPosicao(element) {
 
   ativos.forEach((codigo) => {
     const ativo = extrato().codigo(codigo);
+    let cotacao = bolsaHoje(codigo);
+    let precoMedio = ativo.precoMedio;
     resultado.push({
       codigo,
       quantidade: ativo.quantidade,
-      cotacao: bolsaHoje(codigo),
-      precoMedio: ativo.precoMedio,
+      cotacao,
+      precoMedio,
+      seta: cotacao >= precoMedio ? "setaPositiva" : "setaNegativa",
     });
   });
 

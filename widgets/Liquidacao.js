@@ -5,7 +5,7 @@ const template = `
   <div class="card-body">
     <h5 class="card-title text-uppercase">Venda</h5>
     <p class="card-text small">Cálculo para fins de liquidação do ativo.</p>
-    <table class="table text-end">
+    <table class="table">
       <thead>
         <tr>
           <td></td>
@@ -16,7 +16,7 @@ const template = `
       <tbody class="table-group-divider">
         <% liquidacao.forEach((item) => { %>
         <tr>
-          <th class="text-start"><%= item.codigo %></th>
+          <th><%= item.codigo %></th>
           <td><%- formata(item.imposto, 'BRL') %></td>
           <td><%- formata(item.valor, 'BRL') %></td>
         </tr>

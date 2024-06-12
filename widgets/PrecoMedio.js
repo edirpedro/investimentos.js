@@ -36,7 +36,7 @@ export default function WidgetPrecoMedio(element) {
 
 function grafico(element, series, precoMedio) {
   let valores = series[0].data.map((item) => item[1]);
-  valores.push(precoMedio);
+  valores.push(precoMedio + 0.1); // para não conflitar com o markline
 
   series[0] = Object.assign(
     {

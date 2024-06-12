@@ -109,11 +109,7 @@ export default function WidgetTesouro(element) {
   if (dataVenda.day < dataCompra.day)
     dataVenda = dataVenda.plus({ days: dataCompra.day - dataVenda.day });
   resultado.poupanca = calcRentabilidade(
-    poupancaCorrigida(
-      investimento,
-      dataCompra.toMillis(),
-      dataVenda.toMillis()
-    ),
+    poupancaCorrigida(investimento, dataCompra, dataVenda),
     investimento
   );
 

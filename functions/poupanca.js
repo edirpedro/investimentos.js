@@ -21,8 +21,12 @@ export async function loadPoupanca() {
         item.dia = parseInt(data[0]); // Auxilia na separação de dados mensais
         item.data = data.reverse().join("-");
         item.data = luxon.DateTime.fromISO(item.data).toMillis();
-        item.datafim = item.datafim.split("/").reverse().join("-");
+
+        let datafim = item.datafim.split("/");
+        item.diafim = parseInt(datafim[0]); // Auxilia na separação de aniversários
+        item.datafim = datafim.reverse().join("-");
         item.datafim = luxon.DateTime.fromISO(item.datafim).toMillis();
+
         item.valor = parseFloat(item.valor);
         return item;
       });
@@ -47,6 +51,16 @@ export function poupancaDados() {
  */
 export function poupancaDadosMensais() {
   return poupancaDados().filter((item) => item.dia === 1);
+}
+
+/**
+ * Retorna os dados mensais de cada aniversário
+ * @param {number} dia - Dia do aniversário
+ * @returns {array}
+ */
+export function poupancaDadosAniversarios(dia) {
+  if (dia > 28) dia = 1; // Regra do Banco Central
+  return poupancaDados().filter((item) => item.diafim == dia);
 }
 
 /**
@@ -87,6 +101,40 @@ export function poupancaMensal(de = null, ate = null, acumulado = false) {
 }
 
 /**
+ * Retorna os dados dos aniversários dentro do período
+ * Segue a metodologia explicada na calculadora do cidadão.
+ * https://www3.bcb.gov.br/CALCIDADAO/publico/corrigirPelaPoupanca.do?method=corrigirPelaPoupanca
+ * @param {timestamp|ISO|DateTime} de - Data inicial
+ * @param {timestamp|ISO|DateTime|null} ate - Data final ou será usada a data atual
+ * @param {boolean} acumulado - Se o valor deve ser acumulado
+ * @returns {array}
+ */
+export function poupancaAniversarios(de, ate = null, acumulado = false) {
+  de = preparaData(de ? de : "2012-06-05").startOf("day");
+  ate = preparaData(ate ? ate : luxon.DateTime.now()).startOf("day");
+
+  // Dias 29, 30 e 31 avançam para o dia 1.
+  if (de.day > 28) de = de.endOf("month").plus({ days: 1 }).startOf("day");
+
+  // Contagem de aniversários
+  let nivers = luxon.Interval.fromDateTimes(de, ate)
+    .splitBy({ months: 1 })
+    .map((item) => item.end) // pega os intervalos finais
+    .filter((item) => item.day == de.day) // apenas as datas com dia do aniversário
+    .map((item) => item.toMillis()); // converte para buscar nos dados
+
+  // Ainda não completou o primeiro aniversário
+  if (nivers.length == 0) return [];
+
+  // Coleta os dados dos efetivos aniversários
+  let dados = poupancaDadosAniversarios(de.day).filter((item) => {
+    return nivers.includes(item.datafim);
+  });
+
+  return acumulado ? calculaAcumulado(dados, "valor") : dados;
+}
+
+/**
  * Retorna os dados dos últimos 12 meses
  * @param {boolean} acumulado - Realiza o acumulado dos dados
  * @returns {array}
@@ -117,48 +165,19 @@ export function poupancaAcumuladoAno() {
 
 /**
  * Cálculo de correção da Poupança
- *
  * Segue a metodologia explicada na calculadora do cidadão.
  * https://www3.bcb.gov.br/CALCIDADAO/publico/corrigirPelaPoupanca.do?method=corrigirPelaPoupanca
- *
  * Método não acompanha aportes, entendo que é desnecessário,
  * serve para olhar para a rentabiliadde e não os rendimentos.
- *
  * @param {number} investimento - Valor do investimento
- * @param {timestamp} de - Data inicial do investimento
- * @param {timestamp} ate - Data final do investimento
+ * @param {timestamp|ISO|DateTime} de - Data inicial do investimento
+ * @param {timestamp|ISO|DateTime|null} ate - Data final do investimento ou será a data de hoje
  * @returns {number} - Valor do investimento corrigido
  */
 export function poupancaCorrigida(investimento, de, ate = null) {
-  de = luxon.DateTime.fromMillis(de).startOf("day");
-  ate = ate
-    ? luxon.DateTime.fromMillis(ate).startOf("day")
-    : luxon.DateTime.now().startOf("day");
-
-  // Dias 29, 30 e 31 avançam para o dia 1.
-  if (de.day > 28) de = de.endOf("month").plus({ days: 1 }).startOf("day");
-
-  // Contagem de aniversários
-  let nivers = luxon.Interval.fromDateTimes(de, ate)
-    .splitBy({ months: 1 })
-    .map((item) => item.end) // pega os intervalos finais
-    .filter((item) => item.day == de.day) // apenas as datas com dia do aniversário
-    .map((item) => item.toMillis()); // converte para buscar no json
-
-  // Ainda não completou o primeiro aniversário
-  if (nivers.length == 0) return investimento;
-
-  // Índices da poupança
-  let poupanca = poupancaDados()
-    .filter((item) => nivers.includes(item.datafim))
-    .map((item) => item.valor);
-
-  // Cálculo de correção
   let indice = 1;
-  nivers.forEach((item, index) => {
-    indice *= 1 + poupanca[index] / 100;
+  poupancaAniversarios(de, ate).forEach((item) => {
+    indice *= 1 + item.valor / 100;
   });
-  investimento *= indice;
-
-  return investimento;
+  return (investimento *= indice);
 }

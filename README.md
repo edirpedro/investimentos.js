@@ -35,7 +35,7 @@ Esta é uma ideia de utilizar JavaScript para consolidar dados de investimentos 
 - **/widgets**: Componentes que geram uma resposta para alguma pergunta, quanto mais direto ao ponto e menos complexo melhor;
 - **/proxy**: Fornece acesso para conteúdo externo, evitando problemas com CORS;
 - **/tests**: Alguns testes para garantir o bom funcionamento;
-- **/app.js**: Arquivo principal que inícia a aplicação;
+- **/app.js**: Arquivo principal que inicia a aplicação;
 - **/config.js**: Arquivo de configurações, duplique o arquivo de exemplo e faça suas alterações;
 
 ### /database/extrato.csv

@@ -7,7 +7,7 @@ const template = `
       <span class="me-auto text-uppercase">Cotações</span>
     </h5>
     <p class="card-text small">Quanto os ativos estão valendo hoje.</p>
-    <table class="table text-end">
+    <table class="table">
       <thead>
         <tr>
           <td></td>
@@ -20,9 +20,9 @@ const template = `
       <tbody class="table-group-divider">
         <% resultado.forEach((item) => { %>
         <tr>
-          <th class="text-start"><%= item.codigo %></th>
+          <th><%= item.codigo %></th>
           <td><%- formata(item.precoMedio, 'BRL') %></td>
-          <td class="<%= item.cor %>"><%- formata(item.cotacao, 'BRL') %></td>
+          <td><%- formata(item.cotacao, ['BRL', item.seta]) %></td>
           <td><%- formata(item.minimo, 'BRL') %></td>
           <td><%- formata(item.maximo, 'BRL') %></td>
         </tr>
@@ -53,7 +53,7 @@ export default function WidgetCotacoes(element) {
       maximo: dados.fiftyTwoWeekHigh,
       cotacao,
       precoMedio,
-      cor: cotacao < precoMedio ? "text-danger" : "",
+      seta: cotacao >= precoMedio ? "setaPositiva" : "setaNegativa",
     });
   });
 

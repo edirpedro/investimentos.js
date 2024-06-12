@@ -32,12 +32,18 @@ export async function loadBolsa() {
         if (response?.chart?.error == null) {
           const result = response.chart.result[0];
           let cotacoes = [];
+          let anterior = 0;
           result.timestamp.forEach((timestamp, index) => {
-            const data = luxon.DateTime.fromSeconds(timestamp).startOf("day");
-            cotacoes.push({
-              data: data.toMillis(),
-              valor: result.indicators.quote[0].close[index],
-            });
+            // Corrigindo fuso horário no timestamp
+            let data = luxon.DateTime.fromSeconds(timestamp)
+              .startOf("day")
+              .toMillis();
+            let valor = result.indicators.quote[0].close[index];
+            // TODO As vezes retorna ontem como null, não descobri o motivo!
+            // Se ocorrer, utiliza a última cotação válida como auxiliar
+            if (valor === null) valor = anterior;
+            else anterior = valor;
+            cotacoes.push({ data, valor });
           });
           CACHE[codigo] = { dados: result.meta, cotacoes };
         }

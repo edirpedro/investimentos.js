@@ -1,7 +1,7 @@
 import {
   extrato,
+  poupancaAniversarios,
   poupancaCorrigida,
-  poupancaMensal,
   ipcaMensal,
   cdiDiario,
   bolsaDia,
@@ -192,14 +192,13 @@ function grafico(element, series) {
   const ate = serie.at(-1)[0];
 
   // Poupança
-  // TODO pode não ser preciso mas coloca o rastro da poupança no gráfico
 
   series.push({
     name: "Poupança",
     type: "line",
     showSymbol: false,
-    data: poupancaMensal(de.plus({ months: 1 }), ate, true).map((item) => [
-      item.data,
+    data: poupancaAniversarios(de, ate, true).map((item) => [
+      item.datafim,
       item.valor,
     ]),
   });
@@ -306,11 +305,9 @@ function espalharIndicadores(series) {
   const dias = diasUteis(de, ate);
   series.forEach((serie) => {
     if (["Poupança", "IPCA"].includes(serie.name)) {
-      let valor = serie.data[0][1];
       let resultado = dias.map((dia) => {
         let item = serie.data.findLast((item) => item[0] <= dia);
-        if (item) valor = item[1];
-        return [dia, valor];
+        return [dia, item ? item[1] : 0];
       });
       serie.data = resultado;
     }

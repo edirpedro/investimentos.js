@@ -14,7 +14,7 @@ const template = `
     <% }); %>
   </ul>
   <div>
-    <button id="updateStorage" class="btn btn-outline-light"><i class="bi bi-arrow-repeat"></i></button>
+    <button id="updateStorage" class="btn btn-outline-light" title="Atualizar"><i class="bi bi-arrow-repeat"></i></button>
   </div>
   <hr />
   <small>Extrato <%= dataExtrato %></small>
@@ -45,7 +45,7 @@ export default function WidgetSidebar(element) {
   // Botão para atualizar os dados
 
   document.querySelector("#updateStorage").addEventListener("click", () => {
-    fetch(config.proxy + "?clear");
+    fetch(config.proxy + "?refresh");
     window.location.reload();
   });
 }
