@@ -1,4 +1,4 @@
-import { extrato } from "/functions/index.js";
+import { extrato, bolsaHoje, calcRentabilidade } from "/functions/index.js";
 
 const template = `
 <div class="row">
@@ -29,6 +29,23 @@ const template = `
  */
 export default function PageFIIs(element) {
   let ativos = extrato().produtos("fiis");
+
+  // Lista de ativos ordenada por rentabilidade
+
+  ativos = ativos.map((codigo) => {
+    const ativo = extrato().codigo(codigo);
+    let investido = ativo.investido;
+    let proventos = ativo.proventos().valor;
+    let quantidade = ativo.quantidade;
+    let cotacao = bolsaHoje(codigo);
+    return [
+      codigo,
+      calcRentabilidade(cotacao * quantidade + proventos, investido),
+    ];
+  });
+  ativos = ativos.sort((a, b) => b[1] - a[1]);
+  ativos = ativos.map((item) => item[0]);
+
   let codigos = ativos.join(",");
   let html = ejs.render(template, { ativos, codigos });
   element.innerHTML = html;

@@ -97,6 +97,9 @@ function grafico(element, series) {
       splitLine: {
         show: false,
       },
+      // Centraliza a linha zero
+      min: (value) => -Math.max(value.max, Math.abs(value.min)),
+      max: (value) => Math.max(value.max, Math.abs(value.min)),
     },
     grid: {
       top: 0,

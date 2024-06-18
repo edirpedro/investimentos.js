@@ -87,7 +87,7 @@ export function cdiMes(month, year) {
 }
 
 /**
- * Retorna os dados mensais de um período
+ * Retorna os dados diários de um período
  * cdiDiario(de, ate, true).map((item) => [item.data, item.valor]) - Mapeia para uma série do gráfico
  * cdiDiario(de, ate).map((item) => item.valor) - Separa apenas os valores
  * cdiDiario(de, ate, true).at(-1).valor - Pega o valor final acumulado do período

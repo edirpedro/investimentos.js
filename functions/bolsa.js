@@ -3,7 +3,7 @@ import { extrato } from "./extrato.js";
 import config from "/config.js";
 
 let CACHE = [];
-let ADICIONAIS = ["^BVSP"];
+let ADICIONAIS = ["^BVSP"]; // FIXME IFIX.SA não é entregue completo pelo YF
 
 // Carrega os dados no cache
 
@@ -21,6 +21,8 @@ export async function loadBolsa() {
       region: "BR",
       lang: "pt-BR",
       includePrePost: "false",
+      includeAdjustedClose: "true",
+      events: "capitalGain|div|split",
       interval: "1d",
       period1: parseInt(hoje.minus({ years: 20 }).toSeconds()),
       period2: parseInt(hoje.toSeconds()),
@@ -31,6 +33,7 @@ export async function loadBolsa() {
       .then((response) => {
         if (response?.chart?.error == null) {
           const result = response.chart.result[0];
+          let dividendos = [];
           let cotacoes = [];
           let anterior = 0;
           result.timestamp.forEach((timestamp, index) => {
@@ -39,13 +42,22 @@ export async function loadBolsa() {
               .startOf("day")
               .toMillis();
             let valor = result.indicators.quote[0].close[index];
-            // TODO As vezes retorna ontem como null, não descobri o motivo!
+            // TODO As vezes retorna como null, não descobri o motivo!
             // Se ocorrer, utiliza a última cotação válida como auxiliar
             if (valor === null) valor = anterior;
             else anterior = valor;
             cotacoes.push({ data, valor });
+            // Dividendos
+            if (result?.events?.dividends) {
+              dividendos = Object.values(result.events.dividends).map(
+                (item) => ({
+                  data: luxon.DateTime.fromSeconds(item.date).toMillis(),
+                  valor: item.amount,
+                })
+              );
+            }
           });
-          CACHE[codigo] = { dados: result.meta, cotacoes };
+          CACHE[codigo] = { dados: result.meta, cotacoes, dividendos };
         }
       });
   });
@@ -80,6 +92,15 @@ export function bolsaSimbolo(codigo) {
  */
 export function bolsaCotacoes(codigo) {
   return bolsaDados(codigo).cotacoes;
+}
+
+/**
+ * Retorna todos os dividendos
+ * @param {string} codigo - Código de negociação
+ * @returns {array}
+ */
+export function bolsaDividendos(codigo) {
+  return bolsaDados(codigo).dividendos;
 }
 
 /**

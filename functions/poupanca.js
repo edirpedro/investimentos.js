@@ -160,9 +160,6 @@ export function poupancaAcumuladoAno() {
   return poupanca12meses(true).at(-1).valor;
 }
 
-// TODO uma ideia para ter aportes  seria usar a entrada investimentos[[timestamp, valor]]
-// depois ao percorrer os aniversários ir incluindo estes valores.
-
 /**
  * Cálculo de correção da Poupança
  * Segue a metodologia explicada na calculadora do cidadão.
@@ -180,4 +177,33 @@ export function poupancaCorrigida(investimento, de, ate = null) {
     indice *= 1 + item.valor / 100;
   });
   return (investimento *= indice);
+  // return (investimento *= 1 + poupancaAniversarios(de, ate, true).at(-1).valor / 100);
+
+  // TODO não vejo necessidade mas deixo aqui a ideia para acompanhar aportes e saques
+  // Utilizar a entrada investimentos como array de aportes e saques [[data, 1000],[data, 100],[data, -50]]
+  // Calcular como sendo multidata, cada aniversário nas entradas é separado agrupando aportes e saques
+  // Saques entram no grupo do aniversário mais próximo a sua data
+  // Cada aniversário é calculado individualmente e no final todos os valores são somados
 }
+
+/*
+Outro formato de uso mas acho que agrupa demais as coisas e inutiliza o nome poupanca para variáveis.
+Como funções ficou mais escalável e menos propenso a conflitos de uso como ocorre em extrato().valor.
+
+poupanca().mediaAno; - como visto em extrato()
+Poupanca.get12meses(); - como variável
+
+class Poupanca {
+  load() {}
+  getDados() {}
+  getDadosMensais(){}
+  getDadosAniversarios(dia) {}
+  mes(mes, ano) {}
+  mensal(de, ate, acumulado) {}
+  aniversarios(de, ate, acumulado) {}
+  get12meses(acumulado) {}
+  correcao(investimento, de, ate) {}
+  get mediaAno() {}
+  get acumuladoAno() {}
+}
+*/

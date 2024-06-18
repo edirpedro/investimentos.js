@@ -87,7 +87,7 @@ export function selicMes(month, year) {
 }
 
 /**
- * Retorna os dados mensais de um período
+ * Retorna os dados diários de um período
  * selicDiario(de, ate, true).map((item) => [item.data, item.valor]) - Mapeia para uma série do gráfico
  * selicDiario(de, ate).map((item) => item.valor) - Separa apenas os valores
  * selicDiario(de, ate, true).at(-1).valor - Pega o valor final acumulado do período
