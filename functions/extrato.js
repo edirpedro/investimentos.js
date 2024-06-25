@@ -88,9 +88,9 @@ function formatValue(value, column) {
     case "movimentacao":
       return value.toUpperCase();
     case "produto":
-      break;
+      return value.trim();
     case "instituicao":
-      break;
+      return value.trim();
     case "quantidade":
       value = parseFloat(value.replace(",", "."));
       return typeof value == "number" && !isNaN(value) ? value : 0;
