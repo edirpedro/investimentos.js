@@ -13,7 +13,7 @@ error_reporting(0);
 // Marca os arquivos para atualização evitando ficar sem dados quando falha
 
 if (isset($_GET['refresh'])) {
-  foreach (glob("cache/*.json") as $file)
+  foreach (glob("cache/*") as $file)
     rename($file, "{$file}.refresh");
   exit;
 }
@@ -36,7 +36,7 @@ if ($url && !file_exists("cache/{$name}.json")) {
     file_put_contents("cache/{$name}.json", $json);
     unlink("cache/{$name}.json.refresh");
   } else {
-    file_put_contents("cache/error.log", date('d/m/Y H:i:s') . " {$name} {$url}\n", FILE_APPEND);
+    file_put_contents("error.log", date('d/m/Y H:i:s') . " {$name} {$url}\n", FILE_APPEND);
     rename("cache/{$name}.json.refresh", "cache/{$name}.json");
   }
 }
@@ -44,7 +44,4 @@ if ($url && !file_exists("cache/{$name}.json")) {
 // Retorna os dados de um arquivo
 
 header('Content-Type: application/json; charset=utf-8');
-if (file_exists("cache/{$name}.json"))
-  echo file_get_contents("cache/{$name}.json");
-else
-  echo '{}';
+echo file_exists("cache/{$name}.json") ? file_get_contents("cache/{$name}.json") : '{}';
