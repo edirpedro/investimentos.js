@@ -27,7 +27,7 @@ const template = `
           <td><%- formata(item.maximo, 'BRL') %></td>
         </tr>
         <% }); %>
-      <tbody>
+      </tbody>
     </table>
   </div>
 </div>

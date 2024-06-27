@@ -27,7 +27,7 @@ const template = `
               <td><%- formata(item.em6meses, ['porcentagem', 'negativo']) %></td>
             </tr>
             <% }); %>
-          <tbody>
+          </tbody>
           <tfoot class="table-group-divider">
             <tr>
               <th class="text-start">Carteira</th>
@@ -50,7 +50,7 @@ const template = `
               <td><%- formata(item.em12meses, ['porcentagem', 'negativo']) %></td>
             </tr>
             <% }); %>
-          <tbody>
+          </tbody>
           <tfoot class="table-group-divider">
             <tr>
               <th class="text-start">Carteira</th>

@@ -44,7 +44,7 @@ const template = `
           <td><%- formata(item.media, 'BRL') %></td>
         </tr>
         <% }); %>
-      <tbody>
+      </tbody>
     </table>
   </div>
 </div>

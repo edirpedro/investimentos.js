@@ -21,7 +21,7 @@ const template = `
           <td><%- formata(item.valor, 'BRL') %></td>
         </tr>
         <% }); %>
-      <tbody>
+      </tbody>
     </table>
   </div>
 </div>

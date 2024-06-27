@@ -23,7 +23,7 @@ const template = `
           <td><%- formata(item.cotacao, ['BRL', item.seta]) %></td>
         </tr>
         <% }); %>
-      <tbody>
+      </tbody>
     </table>
   </div>
 </div>
