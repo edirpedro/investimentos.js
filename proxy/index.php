@@ -13,7 +13,7 @@ error_reporting(0);
 // Marca os arquivos para atualização evitando ficar sem dados quando falha
 
 if (isset($_GET['refresh'])) {
-  foreach (glob("cache/*") as $file)
+  foreach (glob("cache/*[!{.refresh}]") as $file)
     rename($file, "{$file}.refresh");
   exit;
 }
@@ -44,4 +44,5 @@ if ($url && !file_exists("cache/{$name}.json")) {
 // Retorna os dados de um arquivo
 
 header('Content-Type: application/json; charset=utf-8');
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 echo file_exists("cache/{$name}.json") ? file_get_contents("cache/{$name}.json") : '{}';

@@ -16,13 +16,13 @@ export function calcJurosCompostos(valor, taxa, periodo) {
   return calcValorFuturo(valor, taxa, periodo);
 }
 
-// BCB export function calculadora do cidadão (Valor Futuro)
+// BCB calculadora do cidadão (Valor Futuro)
 // R = (1 + T) ^ P . V
 export function calcValorFuturo(valor, taxa, periodo) {
   return Math.pow(1 + taxa / 100, periodo) * valor;
 }
 
-// BCB export function calculadora do cidadão (Depósitos Regulares)
+// BCB calculadora do cidadão (Depósitos Regulares)
 // R = (1 + T) . [((1 + T) ^ P) - 1 / T] . V
 export function calcDepositosRegulares(valor, taxa, periodo) {
   taxa /= 100;

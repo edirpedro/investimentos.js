@@ -25,7 +25,6 @@ export default function WidgetCarteiraMensal(element) {
   // Montando carteira
 
   let ativos = extrato().produtos("fiis");
-  ativos = ativos.filter((codigo) => /11$/g.test(codigo));
   let carteira = consolida(ativos);
 
   series.push({

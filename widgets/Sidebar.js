@@ -14,7 +14,8 @@ const template = `
     <% }); %>
   </ul>
   <div>
-    <button id="updateStorage" class="btn btn-outline-light" title="Atualizar"><i class="bi bi-arrow-repeat"></i></button>
+    <a href="https://github.com/edirpedro/investimentos.js" target="_blank" class="btn btn-dark"><i class="bi bi-github"></i></a>
+    <button id="atualizarDados" class="btn btn-outline-light" title="Atualizar"><i class="bi bi-arrow-repeat"></i></button>
   </div>
   <hr />
   <small>Extrato <%= dataExtrato %></small>
@@ -44,7 +45,7 @@ export default function WidgetSidebar(element) {
 
   // Botão para atualizar os dados
 
-  document.querySelector("#updateStorage").addEventListener("click", () => {
+  document.querySelector("#atualizarDados").addEventListener("click", () => {
     fetch(config.proxy + "?refresh");
     window.location.reload();
   });

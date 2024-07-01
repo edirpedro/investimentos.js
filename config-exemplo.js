@@ -8,6 +8,7 @@ const config = {
     { nome: "Renda Fixa", componente: "RendaFixa" },
     { nome: "Tesouro Direto", componente: "Tesouro" },
     { nome: "Extrato", componente: "Extrato" },
+    { nome: "Calculadoras", componente: "Calculadoras" },
     { nome: "Olá Mundo", componente: "OlaMundo" },
   ],
 };
