@@ -36,6 +36,8 @@ export async function loadBolsa() {
           let dividendos = [];
           let cotacoes = [];
           let anterior = 0;
+
+          // Cotações
           result.timestamp.forEach((timestamp, index) => {
             // Corrigindo fuso horário no timestamp
             let data = luxon.DateTime.fromSeconds(timestamp)
@@ -47,16 +49,18 @@ export async function loadBolsa() {
             if (valor === null) valor = anterior;
             else anterior = valor;
             cotacoes.push({ data, valor });
-            // Dividendos
-            if (result?.events?.dividends) {
-              dividendos = Object.values(result.events.dividends).map(
-                (item) => ({
-                  data: luxon.DateTime.fromSeconds(item.date).toMillis(),
-                  valor: item.amount,
-                })
-              );
-            }
           });
+
+          // Dividendos
+          if (result?.events?.dividends) {
+            dividendos = Object.values(result.events.dividends).map((item) => ({
+              data: luxon.DateTime.fromSeconds(item.date)
+                .startOf("day")
+                .toMillis(),
+              valor: item.amount,
+            }));
+          }
+
           CACHE[codigo] = { dados: result.meta, cotacoes, dividendos };
         }
       });
