@@ -198,7 +198,7 @@ function grafico(element, series) {
     type: "line",
     showSymbol: false,
     data: poupancaAniversarios(de, ate, true).map((item) => [
-      item.datafim,
+      item.dataFim,
       item.valor,
     ]),
   });

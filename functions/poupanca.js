@@ -22,10 +22,10 @@ export async function loadPoupanca() {
         item.data = data.reverse().join("-");
         item.data = luxon.DateTime.fromISO(item.data).toMillis();
 
-        let datafim = item.datafim.split("/");
-        item.diafim = parseInt(datafim[0]); // Auxilia na separação de aniversários
-        item.datafim = datafim.reverse().join("-");
-        item.datafim = luxon.DateTime.fromISO(item.datafim).toMillis();
+        let dataFim = item.dataFim.split("/");
+        item.diaFim = parseInt(dataFim[0]); // Auxilia na separação de aniversários
+        item.dataFim = dataFim.reverse().join("-");
+        item.dataFim = luxon.DateTime.fromISO(item.dataFim).toMillis();
 
         item.valor = parseFloat(item.valor);
         return item;
@@ -60,7 +60,7 @@ export function poupancaDadosMensais() {
  */
 export function poupancaDadosAniversarios(dia) {
   if (dia > 28) dia = 1; // Regra do Banco Central
-  return poupancaDados().filter((item) => item.diafim == dia);
+  return poupancaDados().filter((item) => item.diaFim == dia);
 }
 
 /**
@@ -128,7 +128,7 @@ export function poupancaAniversarios(de, ate = null, acumulado = false) {
 
   // Coleta os dados dos efetivos aniversários
   let dados = poupancaDadosAniversarios(de.day).filter((item) => {
-    return nivers.includes(item.datafim);
+    return nivers.includes(item.dataFim);
   });
 
   return acumulado ? calculaAcumulado(dados, "valor") : dados;
