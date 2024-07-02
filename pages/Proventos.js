@@ -1,10 +1,10 @@
-import { extrato, formata } from "/functions/index.js";
+import { extrato, formata, bolsaDividendos } from "/functions/index.js";
 
 const template = `
 <div class="card mb-4 shadow-lg">
   <div class="card-body">
     <h5 class="card-title text-uppercase">Proventos</h5>
-    <p class="card-text small">Valores recebidos até hoje, inclui Rendimentos, Dividendos e JCP.</p>
+    <p class="card-text small">Valores recebidos nos últimos 12 meses, inclui Rendimentos, Dividendos e JCP.</p>
     <div class="chart" style="height:400px"></div>
   </div>
 </div>
@@ -28,6 +28,7 @@ const template = `
 </div>
 <div class="card mb-4 shadow-lg">
   <div class="card-body">
+    <h5 class="card-title text-uppercase">Recebidos</h5>
     <table class="table text-end">
       <thead>
         <tr>
@@ -48,6 +49,35 @@ const template = `
     </table>
   </div>
 </div>
+<% if(recebiveis.length) { %>
+<div class="card mb-4 shadow-lg">
+  <div class="card-body">
+    <h5 class="card-title text-uppercase">Recebíveis</h5>
+    <table class="table text-end">
+      <thead>
+        <tr>
+          <td></td>
+          <th>Pagamento</th>
+          <th>Quantidade</th>
+          <th>Unitário</th>
+          <th>Valor</th>
+        </tr>
+      </thead>
+      <tbody class="table-group-divider">
+        <% recebiveis.forEach((item) => { %>
+        <tr>
+          <th class="text-start"><%= item.codigo %></th>
+          <td><%= item.pagamento %></td>
+          <td><%= item.quantidade %></td>
+          <td><%- formata(item.unitario, 'BRL') %></td>
+          <td><%- formata(item.valor, 'BRL') %></td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<% } %>
 `;
 
 /**
@@ -97,7 +127,7 @@ export default function PageProventos(element) {
     },
   };
 
-  // Tabela
+  // Recebidos
 
   let proventos = extrato()
     .produtos("ativos")
@@ -119,10 +149,34 @@ export default function PageProventos(element) {
 
   let media = proventos.reduce((sum, item) => (sum += item.media), 0);
 
+  // Recebíveis
+
+  let recebiveis = [];
+  let hoje = luxon.DateTime.now();
+  codigos.forEach((codigo) => {
+    let quantidade = extrato().codigo(codigo).quantidade;
+    bolsaDividendos(codigo)
+      .filter((item) => item.data >= hoje)
+      .map((item) =>
+        recebiveis.push({
+          data: item.data,
+          codigo,
+          quantidade,
+          pagamento: luxon.DateTime.fromMillis(item.data).toLocaleString(),
+          unitario: item.valor,
+          valor: item.valor * quantidade,
+        })
+      );
+  });
+  recebiveis = recebiveis.sort((a, b) => b.data - a.data);
+
+  // Template
+
   let html = ejs.render(template, {
     proventos,
     acumulado,
     media,
+    recebiveis,
     formata,
   });
   element.innerHTML = html;
