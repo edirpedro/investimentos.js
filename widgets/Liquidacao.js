@@ -22,6 +22,13 @@ const template = `
         </tr>
         <% }); %>
       </tbody>
+      <tfoot class="table-group-divider">
+        <tr>
+          <th>Total</th>
+          <td><%- formata(total.imposto, 'BRL') %></td>
+          <td><%- formata(total.valor, 'BRL') %></td>
+        </tr>
+      </tbody>
     </table>
   </div>
 </div>
@@ -35,6 +42,7 @@ export default function WidgetLiquidacao(element) {
   ativos = ativos.split(",");
 
   let liquidacao = [];
+  let total = { imposto: 0, valor: 0 };
 
   ativos.forEach((codigo) => {
     const ativo = extrato().codigo(codigo);
@@ -44,8 +52,12 @@ export default function WidgetLiquidacao(element) {
     let valor = cotacao * quantidade;
     let imposto = calculoDARF(investido, valor);
     liquidacao.push({ codigo, imposto, valor });
+    total.valor += valor;
+    total.imposto += investido;
   });
 
-  let html = ejs.render(template, { liquidacao, formata });
+  total.imposto = calculoDARF(total.imposto, total.valor);
+
+  let html = ejs.render(template, { liquidacao, total, formata });
   element.innerHTML = html;
 }
